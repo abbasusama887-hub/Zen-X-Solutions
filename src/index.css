@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --brand-bg: #000612;
+    --brand-text: #ece1df;
+    --brand-card: #be1920;
+    --brand-card-border: rgba(236, 225, 223, 0.15);
+    --brand-accent-red: #be1920;
+
+    /* Typography scale */
+    --font-body:     'Inter', system-ui, -apple-system, sans-serif;
+    --font-display:  'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  html {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    background-color: #000612;
+    color: #ece1df;
+  }
+
+  /* Headings use Manrope — geometric, strong, modern-tech feel */
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: var(--font-display);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  /* Body copy uses Inter — the industry standard for SaaS/tech readability */
+  p, li, span, a, button, input, textarea, select, label {
+    font-family: var(--font-body);
+  }
+
+  /* Mono text stays system mono */
+  code, pre, .font-mono {
+    font-family: 'Menlo', 'Consolas', 'Monaco', monospace;
+    font-size: 0.875em;
+  }
+}
+
+/* Custom Scrollbar styled for dark obsidian aesthetic with red accent indicator */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #000612;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(236, 225, 223, 0.25);
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 6, 18, 0.5);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #be1920;
+}
+
+/* Glassmorphism & Card surfaces strictly within #000612, #ece1df, and #be1920 */
+.brand-glass {
+  background: rgba(0, 6, 18, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(236, 225, 223, 0.15);
+}
+
+.brand-card-red {
+  background-color: #be1920;
+  border: 1px solid rgba(236, 225, 223, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+}
+
+.brand-soft-shadow {
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.25);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Hero headline — continuous breathing animation
+   GPU-only: opacity + transform only (no layout properties).
+   Cycle: 6 s, smooth sinusoidal feel via ease-in-out.
+   Reduced-motion: animation removed entirely.
+───────────────────────────────────────────────────────────────────────────── */
+@keyframes heroTextBreathe {
+  0%   { opacity: 1;    transform: translateY(0px)    scale(1);       letter-spacing: -0.025em; }
+  30%  { opacity: 0.88; transform: translateY(-3px)   scale(1.0035);  letter-spacing: -0.022em; }
+  60%  { opacity: 0.95; transform: translateY(-1.5px) scale(1.002);   letter-spacing: -0.024em; }
+  80%  { opacity: 0.92; transform: translateY(-2.5px) scale(1.003);   letter-spacing: -0.023em; }
+  100% { opacity: 1;    transform: translateY(0px)    scale(1);       letter-spacing: -0.025em; }
+}
+
+.hero-headline-breathe {
+  animation: heroTextBreathe 6s ease-in-out infinite;
+  /* Start only after the entrance stagger has finished (~0.9 s) */
+  animation-delay: 0.9s;
+  /* Keep the initial state before the animation begins */
+  animation-fill-mode: backwards;
+  will-change: transform, opacity;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-headline-breathe {
+    animation: none;
+  }
+}
+
+.brand-soft-shadow-lg {
+  box-shadow: 0 16px 45px -8px rgba(0, 0, 0, 0.35);
+}
