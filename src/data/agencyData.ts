@@ -6,6 +6,10 @@ import {
   TestimonialItem,
   TechItem,
 } from '../types';
+import portfolioEcommerceImg from '../assets/images/portfolio_ecommerce_1790702873198.jpg';
+import portfolioFintechImg from '../assets/images/portfolio_fintech_1790702860554.jpg';
+import portfolioMobileImg from '../assets/images/portfolio_mobile_1790702905199.jpg';
+import heroDigitalGridImg from '../assets/images/hero_digital_grid_1790702847669.jpg';
 
 export const BRAND_COLORS = {
   bg: '#000612',
@@ -523,7 +527,7 @@ export const PORTFOLIO_PROJECTS: ProjectItem[] = [
     client: 'Aura Luxury Group',
     category: 'Shopify Plus & Web Dev',
     year: '2026',
-    image: '/src/assets/images/portfolio_ecommerce_1790702873198.jpg',
+    image: portfolioEcommerceImg,
     summary: 'Custom Shopify Plus flagship store with interactive 3D configurator, headless cart, and automated ERP inventory syncing.',
     challenge: 'A legacy WooCommerce store with slow 4.2s load times, cart abandonment over 78%, and disjointed mobile experience.',
     solution: 'Engineered a bespoke headless storefront powered by Next.js and Shopify Storefront API with instant page transitions and multi-currency checkout.',
@@ -540,7 +544,7 @@ export const PORTFOLIO_PROJECTS: ProjectItem[] = [
     client: 'Strata Financial Inc.',
     category: 'Payment Gateway & Fintech',
     year: '2026',
-    image: '/src/assets/images/portfolio_fintech_1790702860554.jpg',
+    image: portfolioFintechImg,
     summary: 'Enterprise cross-border payment gateway portal handling multi-currency disbursement and real-time fraud mitigation.',
     challenge: 'Complex multi-currency payouts required instant verification while maintaining rigorous PCI-DSS Level 1 compliance.',
     solution: 'Designed and engineered an intuitive banking dashboard with microservices, biometric session authorization, and automated webhook settlement.',
@@ -557,7 +561,7 @@ export const PORTFOLIO_PROJECTS: ProjectItem[] = [
     client: 'Pulse Active Technologies',
     category: 'Mobile App & UI/UX',
     year: '2025',
-    image: '/src/assets/images/portfolio_mobile_1790702905199.jpg',
+    image: portfolioMobileImg,
     summary: 'Fluid 120Hz gesture-driven mobile app for athlete biometric tracking, workout logging, and real-time community challenges.',
     challenge: 'Previous hybrid app suffered from sluggish frame drops, Bluetooth sync disconnects, and low user retention.',
     solution: 'Re-architected native iOS and Android modules with offline SQLite syncing, health kit integrations, and smooth haptic feedback.',
@@ -574,7 +578,7 @@ export const PORTFOLIO_PROJECTS: ProjectItem[] = [
     client: 'Vanguard Industrial B2B',
     category: 'SEO & Digital Marketing',
     year: '2025',
-    image: '/src/assets/images/hero_digital_grid_1790702847669.jpg',
+    image: heroDigitalGridImg,
     summary: 'Comprehensive B2B digital transformation combining high-intent technical SEO, targeted paid media, and lead funnel automation.',
     challenge: 'B2B industrial client relied solely on trade shows with zero inbound pipeline and disjointed brand presence.',
     solution: 'Built an authoritative technical resource portal, implemented programmatic SEO clusters, and optimized paid LinkedIn lead generation funnels.',

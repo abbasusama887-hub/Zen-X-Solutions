@@ -148,7 +148,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact }) => {
                 <span className="w-1 h-1 rounded-full bg-[#be1920]" />
               </div>
               <div className="text-[11px] text-[#ece1df]/45 mt-0.5">
-                {stat.subtext}
+                {stat.detail}
               </div>
             </div>
           ))}
