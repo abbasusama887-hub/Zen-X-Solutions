@@ -19,7 +19,6 @@ interface StatCountFormat {
 const STAT_COUNT_FORMATS: Record<string, StatCountFormat> = {
   '180+': { target: 180, decimals: 0, prefix: '', suffix: '+' },
   '99.4%': { target: 99.4, decimals: 1, prefix: '', suffix: '%' },
-  '$65M+': { target: 65, decimals: 0, prefix: '$', suffix: 'M+' },
   '<15m': { target: 15, decimals: 0, prefix: '<', suffix: 'm' },
 };
 

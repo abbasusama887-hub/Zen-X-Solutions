@@ -444,8 +444,9 @@ const CoverflowCard: React.FC<CardProps> = ({ feature, offset, isMobile, onClick
       className="absolute top-0 left-0 right-0 mx-auto cursor-pointer select-none"
       style={{
         zIndex,
-        width: isMobile ? '86vw' : 380,
-        maxWidth: isMobile ? 340 : 380,
+        width: isMobile ? '90vw' : 420,
+        maxWidth: isMobile ? 'min(400px, 90vw)' : 420,
+        height: 410,
         filter: `brightness(${brightness})`,
         transformOrigin: 'center center',
       }}
@@ -453,17 +454,17 @@ const CoverflowCard: React.FC<CardProps> = ({ feature, offset, isMobile, onClick
       <div
         className={`
           relative rounded-2xl overflow-hidden
-          border transition-[box-shadow,border-color] duration-300
+          border-[5px] border-solid border-[#be1920] transition-[box-shadow] duration-300
           ${isActive
-            ? 'border-[#ece1df]/30 shadow-[0_16px_60px_rgba(0,0,0,0.55),0_0_12px_rgba(236,225,223,0.16),0_0_40px_rgba(190,25,32,0.18)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.55),0_0_18px_rgba(236,225,223,0.32),0_0_44px_rgba(190,25,32,0.2)]'
-            : 'border-[#ece1df]/12 shadow-[0_6px_24px_rgba(0,0,0,0.3),0_0_10px_rgba(236,225,223,0.12)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.3),0_0_16px_rgba(236,225,223,0.28)]'
+            ? 'shadow-[0_16px_60px_rgba(0,0,0,0.55),0_0_22px_rgba(236,225,223,0.52),0_0_44px_rgba(236,225,223,0.28)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.55),0_0_26px_rgba(236,225,223,0.62),0_0_52px_rgba(236,225,223,0.36)]'
+            : 'shadow-[0_6px_24px_rgba(0,0,0,0.3),0_0_18px_rgba(236,225,223,0.38),0_0_38px_rgba(236,225,223,0.2)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.3),0_0_22px_rgba(236,225,223,0.5),0_0_46px_rgba(236,225,223,0.3)]'
           }
         `}
         style={{
+          height: '100%',
           background: isActive
             ? 'linear-gradient(145deg, #1a0406 0%, #0f0002 60%, #000612 100%)'
             : 'linear-gradient(145deg, #110203 0%, #0a0001 100%)',
-          borderColor: isActive ? 'rgba(236,225,223,0.25)' : 'rgba(236,225,223,0.10)',
         }}
       >
         {/* Top section: category + icon */}
@@ -608,7 +609,7 @@ export const PlatformShowcaseCarousel: React.FC = () => {
     isDragging.current = false;
   };
 
-  const cardHeight = 370;
+  const cardHeight = 410;
 
   return (
     <section

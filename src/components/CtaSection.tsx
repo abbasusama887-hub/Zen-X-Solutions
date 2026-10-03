@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { ZenXLogo } from './ZenXLogo';
 import { Reveal } from './ScrollReveal';
 
 interface CtaSectionProps {
@@ -14,11 +15,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onOpenContact }) => {
           <div className="relative rounded-3xl bg-[#be1920] text-[#ece1df] border border-[#ece1df]/15 p-8 sm:p-16 lg:p-20 shadow-[0_25px_60px_rgba(0,0,0,0.3)] text-center overflow-hidden">
 
             <div className="flex justify-center mb-6">
-              <img
-                src="/Zen%20X%20Solutions%20Logo%20Reveal%20(2x).gif"
-                alt="Zen X Solutions"
-                className="h-28 sm:h-36 w-auto max-w-full rounded-xl object-contain drop-shadow-[0_0_16px_rgba(236,225,223,0.12)]"
-              />
+              <ZenXLogo size="lg" showText={false} variant="dark" />
             </div>
 
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#ece1df]/80 mb-4">
