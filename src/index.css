@@ -110,3 +110,48 @@
 .brand-soft-shadow-lg {
   box-shadow: 0 16px 45px -8px rgba(0, 0, 0, 0.35);
 }
+
+@keyframes serviceVideoPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(236, 225, 223, 0.25), 0 1px 5px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(236, 225, 223, 0), 0 1px 9px rgba(236, 225, 223, 0.3);
+  }
+}
+
+.service-video-button {
+  animation: serviceVideoPulse 2.6s ease-out infinite;
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.service-video-button:hover {
+  transform: scale(1.06);
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(236, 225, 223, 0.12), 0 0 14px rgba(236, 225, 223, 0.3);
+}
+
+.service-video-button:active {
+  transform: scale(0.96);
+}
+
+.service-video-button:focus-visible {
+  outline: 2px solid #ece1df;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-video-button,
+  .services-carousel {
+    animation: none;
+    transition: none;
+    scroll-behavior: auto;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.spider-cursor-active,
+  html.spider-cursor-active * {
+    cursor: none !important;
+  }
+}

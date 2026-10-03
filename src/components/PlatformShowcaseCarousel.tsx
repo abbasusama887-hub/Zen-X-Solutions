@@ -453,10 +453,10 @@ const CoverflowCard: React.FC<CardProps> = ({ feature, offset, isMobile, onClick
       <div
         className={`
           relative rounded-2xl overflow-hidden
-          border transition-colors duration-300
+          border transition-[box-shadow,border-color] duration-300
           ${isActive
-            ? 'border-[#ece1df]/30 shadow-[0_16px_60px_rgba(0,0,0,0.55),0_0_40px_rgba(190,25,32,0.18)]'
-            : 'border-[#ece1df]/12 shadow-[0_6px_24px_rgba(0,0,0,0.3)]'
+            ? 'border-[#ece1df]/30 shadow-[0_16px_60px_rgba(0,0,0,0.55),0_0_12px_rgba(236,225,223,0.16),0_0_40px_rgba(190,25,32,0.18)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.55),0_0_18px_rgba(236,225,223,0.32),0_0_44px_rgba(190,25,32,0.2)]'
+            : 'border-[#ece1df]/12 shadow-[0_6px_24px_rgba(0,0,0,0.3),0_0_10px_rgba(236,225,223,0.12)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.3),0_0_16px_rgba(236,225,223,0.28)]'
           }
         `}
         style={{

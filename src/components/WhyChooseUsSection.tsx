@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import {
   Binary, Sparkles, Maximize2, BarChart3, Clock, Server, CheckCircle2,
@@ -12,6 +12,29 @@ const iconMap: Record<string, React.FC<{ className?: string }>> = {
 
 export const WhyChooseUsSection: React.FC = () => {
   const [activeFeature, setActiveFeature] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const dragState = useRef<{ pointerId: number; startX: number; scrollLeft: number } | null>(null);
+  const dragged = useRef(false);
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      const canScroll = carousel.scrollWidth > carousel.clientWidth;
+      const canMoveInDirection = event.deltaY > 0
+        ? carousel.scrollLeft < carousel.scrollWidth - carousel.clientWidth
+        : carousel.scrollLeft > 0;
+      if (canScroll && canMoveInDirection) {
+        event.preventDefault();
+        carousel.scrollLeft += event.deltaY;
+      }
+    };
+
+    carousel.addEventListener('wheel', handleWheel, { passive: false });
+    return () => carousel.removeEventListener('wheel', handleWheel);
+  }, []);
 
   return (
     <section id="why-us" className="relative py-28 bg-[#000612] border-t border-[#ece1df]/10">
@@ -38,14 +61,45 @@ export const WhyChooseUsSection: React.FC = () => {
         </div>
 
         {/* ── Feature cards ── */}
-        <StaggerGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" stagger={0.08}>
+        <div
+          ref={carouselRef}
+          className="overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth cursor-grab active:cursor-grabbing"
+          onPointerDown={(event) => {
+            if (event.pointerType !== 'mouse' || event.button !== 0) return;
+            dragState.current = {
+              pointerId: event.pointerId,
+              startX: event.clientX,
+              scrollLeft: event.currentTarget.scrollLeft,
+            };
+            dragged.current = false;
+          }}
+          onPointerMove={(event) => {
+            const drag = dragState.current;
+            if (!drag || drag.pointerId !== event.pointerId) return;
+            const distance = event.clientX - drag.startX;
+            if (Math.abs(distance) > 5) dragged.current = true;
+            if (dragged.current) event.currentTarget.scrollLeft = drag.scrollLeft - distance;
+          }}
+          onPointerUp={() => { dragState.current = null; }}
+          onPointerCancel={() => { dragState.current = null; }}
+          aria-label="Why choose us features, horizontally scrollable"
+          role="region"
+          tabIndex={0}
+        >
+        <StaggerGrid className="flex w-full gap-6" stagger={0.08}>
           {WHY_CHOOSE_US.map((item, idx) => {
             const Icon = iconMap[item.iconName] || Binary;
             const isSelected = activeFeature === idx;
             return (
-              <StaggerItem key={item.id}>
+              <StaggerItem key={item.id} className="w-[82%] flex-none snap-start sm:w-[44%] lg:w-[30%]">
                 <motion.div
-                  onClick={() => setActiveFeature(idx)}
+                  onClick={() => {
+                    if (dragged.current) {
+                      dragged.current = false;
+                      return;
+                    }
+                    setActiveFeature(idx);
+                  }}
                   className={`group relative p-7 rounded-2xl border transition-all duration-300 flex flex-col justify-between cursor-pointer h-full ${
                     isSelected
                       ? 'border-[#ece1df]/30 bg-[#be1920] shadow-md'
@@ -82,6 +136,7 @@ export const WhyChooseUsSection: React.FC = () => {
             );
           })}
         </StaggerGrid>
+        </div>
 
         {/* ── Comparison strip ── */}
         <Reveal delay={0.1} distance={20}>

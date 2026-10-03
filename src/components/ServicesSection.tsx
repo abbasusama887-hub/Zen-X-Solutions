@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Code2,
@@ -33,6 +33,10 @@ import { ServiceVideoPlayer } from './ServiceVideoPlayer';
 
 import { Reveal } from './ScrollReveal';
 
+const prefersReducedMotion =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 interface ServicesSectionProps {
   onOpenContact: (prefillService?: string) => void;
 }
@@ -61,11 +65,44 @@ const iconMap: Record<string, React.FC<{ className?: string }>> = {
 };
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenContact }) => {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const dragState = useRef<{ pointerId: number; startX: number; scrollLeft: number } | null>(null);
+  const dragged = useRef(false);
   const [activeCategory, setActiveCategory] = useState<ServiceCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
   const [spotlightService, setSpotlightService] = useState<ServiceItem>(SERVICES_LIST[0]);
   const [showVideoSpotlight, setShowVideoSpotlight] = useState(false);
+  const [hasInteractedWithCarousel, setHasInteractedWithCarousel] = useState(false);
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      const canScroll = carousel.scrollWidth > carousel.clientWidth;
+      const canMoveInDirection = event.deltaY > 0
+        ? carousel.scrollLeft < carousel.scrollWidth - carousel.clientWidth
+        : carousel.scrollLeft > 0;
+      if (canScroll && canMoveInDirection) {
+        event.preventDefault();
+        carousel.scrollLeft += event.deltaY;
+      }
+    };
+
+    carousel.addEventListener('wheel', handleWheel, { passive: false });
+    return () => carousel.removeEventListener('wheel', handleWheel);
+  }, []);
+
+  useEffect(() => {
+    if (!selectedService) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedService(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedService]);
 
   const categories: { key: ServiceCategory; label: string; count: number }[] = [
     { key: 'all', label: 'All 20 Capabilities', count: 20 },
@@ -219,8 +256,38 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenContact 
           })}
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Horizontal Services Carousel */}
+        <motion.div
+          initial={prefersReducedMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 18 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+        <div
+          ref={carouselRef}
+          className="services-carousel flex gap-6 overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth pb-4 cursor-grab active:cursor-grabbing"
+          onPointerDown={(event) => {
+            if (event.pointerType !== 'mouse' || event.button !== 0) return;
+            dragState.current = {
+              pointerId: event.pointerId,
+              startX: event.clientX,
+              scrollLeft: event.currentTarget.scrollLeft,
+            };
+            dragged.current = false;
+          }}
+          onPointerMove={(event) => {
+            const drag = dragState.current;
+            if (!drag || drag.pointerId !== event.pointerId) return;
+            const distance = event.clientX - drag.startX;
+            if (Math.abs(distance) > 5) dragged.current = true;
+            if (dragged.current) event.currentTarget.scrollLeft = drag.scrollLeft - distance;
+          }}
+          onPointerUp={() => { dragState.current = null; }}
+          onPointerCancel={() => { dragState.current = null; }}
+          onScroll={() => setHasInteractedWithCarousel(true)}
+          onWheel={() => setHasInteractedWithCarousel(true)}
+          aria-label="Service capabilities, horizontally scrollable"
+        >
           {filteredServices.map((service, idx) => {
             const IconComponent = iconMap[service.iconName] || Code2;
             const hasVideo = Boolean(service.videoKey || service.videoUrl);
@@ -232,8 +299,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenContact 
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: Math.min(idx * 0.04, 0.4) }}
-                onClick={() => setSelectedService(service)}
-                className="group relative p-6 rounded-xl bg-[#be1920] hover:bg-[#a5151b] border border-[#ece1df]/15 hover:border-[#ece1df]/25 transition-all duration-300 flex flex-col justify-between cursor-pointer interactive-card shadow-[0_4px_16px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
+                onClick={() => {
+                  if (dragged.current) {
+                    dragged.current = false;
+                    return;
+                  }
+                  setSelectedService(service);
+                }}
+                className="group relative flex-none w-[82%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[min(32%,380px)] snap-start p-6 rounded-xl bg-[#be1920] hover:bg-[#a5151b] border border-[#ece1df]/15 hover:border-[#ece1df]/25 transition-all duration-300 flex flex-col justify-between cursor-pointer interactive-card shadow-[0_4px_16px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
                 data-cursor="Inspect"
               >
                 <div>
@@ -245,10 +318,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenContact 
 
                     <div className="flex items-center gap-1.5">
                       {hasVideo && (
-                        <span className="text-[10px] font-bold text-[#be1920] bg-[#ece1df] px-2 py-0.5 rounded flex items-center gap-1 shadow-sm">
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setSelectedService(service);
+                          }}
+                          onPointerDown={(event) => event.stopPropagation()}
+                          className="service-video-button text-[10px] font-bold text-[#be1920] bg-[#ece1df] px-2 py-0.5 rounded flex items-center gap-1 shadow-sm cursor-pointer"
+                          aria-label={`Play ${service.title} video`}
+                          title={`Play ${service.title} video`}
+                        >
                           <Play className="w-2.5 h-2.5 fill-current" />
                           <span>Video</span>
-                        </span>
+                        </button>
                       )}
                       <span className="text-[11px] font-semibold text-[#ece1df] bg-[#ece1df]/15 px-2.5 py-0.5 rounded border border-[#ece1df]/20">
                         {service.impactMetric}
@@ -300,6 +383,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenContact 
             );
           })}
         </div>
+        </motion.div>
+
+        <div className={`mt-1 flex items-center justify-end gap-2 text-[11px] font-medium text-[#ece1df]/55 transition-opacity duration-300 ${hasInteractedWithCarousel ? 'opacity-0' : 'opacity-100'}`} aria-hidden="true">
+          <span>Drag or scroll to explore</span>
+          <ArrowUpRight className="w-3.5 h-3.5 rotate-45" />
+        </div>
 
         {/* Empty state when search matches nothing */}
         {filteredServices.length === 0 && (
@@ -322,13 +411,17 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenContact 
       {/* Interactive Service Detail & Video Showcase Modal */}
       <AnimatePresence>
         {selectedService && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#000612]/80 backdrop-blur-md">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#000612]/80 backdrop-blur-md"
+            onClick={() => setSelectedService(null)}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.25 }}
               className="relative w-full max-w-3xl bg-[#000612] border border-[#ece1df]/15 rounded-2xl p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.5)] overflow-y-auto max-h-[92vh]"
+              onClick={(event) => event.stopPropagation()}
             >
               <button
                 onClick={() => setSelectedService(null)}

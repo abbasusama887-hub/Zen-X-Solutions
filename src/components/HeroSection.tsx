@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'motion/react';
 import { HeroVideoBackground } from './HeroVideoBackground';
 import { Hero3DCanvas } from './Hero3DCanvas';
 import { AGENCY_STATS } from '../data/agencyData';
@@ -8,6 +8,62 @@ import { ArrowDown, ArrowUpRight, ShieldCheck } from 'lucide-react';
 interface HeroSectionProps {
   onOpenContact: () => void;
 }
+
+interface StatCountFormat {
+  target: number;
+  decimals: number;
+  prefix: string;
+  suffix: string;
+}
+
+const STAT_COUNT_FORMATS: Record<string, StatCountFormat> = {
+  '180+': { target: 180, decimals: 0, prefix: '', suffix: '+' },
+  '99.4%': { target: 99.4, decimals: 1, prefix: '', suffix: '%' },
+  '$65M+': { target: 65, decimals: 0, prefix: '$', suffix: 'M+' },
+  '<15m': { target: 15, decimals: 0, prefix: '<', suffix: 'm' },
+};
+
+const CountUpValue: React.FC<{ value: string }> = ({ value }) => {
+  const format = STAT_COUNT_FORMATS[value];
+  const valueRef = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(valueRef, { once: true, amount: 0.5 });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!isInView || !format) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCount(format.target);
+      return;
+    }
+
+    const duration = 2000;
+    let startTime: number | null = null;
+    let frameId = 0;
+
+    const updateCount = (timestamp: number) => {
+      startTime ??= timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      setCount(progress === 1 ? format.target : format.target * easedProgress);
+      if (progress < 1) frameId = window.requestAnimationFrame(updateCount);
+    };
+
+    frameId = window.requestAnimationFrame(updateCount);
+    return () => window.cancelAnimationFrame(frameId);
+  }, [format, isInView]);
+
+  if (!format) return <span>{value}</span>;
+
+  return (
+    <span ref={valueRef} className="inline-grid align-baseline">
+      <span className="invisible col-start-1 row-start-1" aria-hidden="true">{value}</span>
+      <span className="col-start-1 row-start-1" aria-label={value}>
+        {format.prefix}{count.toFixed(format.decimals)}{format.suffix}
+      </span>
+    </span>
+  );
+};
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact }) => {
   return (
@@ -141,7 +197,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact }) => {
           {AGENCY_STATS.map((stat, idx) => (
             <div key={idx} className="group">
               <div className="text-2xl sm:text-4xl font-display font-black text-[#ece1df] tracking-tight tabular-nums transition-colors">
-                {stat.value}
+                <CountUpValue value={stat.value} />
               </div>
               <div className="text-xs sm:text-sm font-bold text-[#ece1df]/80 mt-1 flex items-center gap-1.5">
                 <span>{stat.label}</span>
