@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Upload } from 'lucide-react';
 
 interface HeroVideoBackgroundProps {
   defaultVideoUrl?: string;
@@ -8,48 +7,17 @@ interface HeroVideoBackgroundProps {
 export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
   defaultVideoUrl = '/videos/hero-network.mp4',
 }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
   const [videoError, setVideoError] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [activeVideoSrc, setActiveVideoSrc] = useState(defaultVideoUrl);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-    }
-  };
-
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = !isMuted;
-    setIsMuted(!isMuted);
-  };
-
-  const handleCustomUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setActiveVideoSrc(url);
-      setVideoError(false);
-      setVideoLoaded(true);
-    }
-  };
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
       {/* HTML5 Background Video with deep #000612 dark scrim */}
       <video
-        ref={videoRef}
-        src={activeVideoSrc}
+        src={defaultVideoUrl}
         autoPlay
         loop
-        muted={isMuted}
+        muted
         playsInline
         onCanPlay={() => {
           setVideoLoaded(true);
@@ -81,45 +49,6 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
         aria-hidden="true"
       />
 
-      {/* Interactive Video Control Badge in bottom corner */}
-      <div className="absolute bottom-6 right-6 z-20 pointer-events-auto flex items-center gap-2 bg-[#000612]/90 backdrop-blur-md border border-[#ece1df]/15 rounded-xl px-3 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
-        <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#ece1df]/80">
-          <span className="w-2 h-2 rounded-full bg-[#be1920] animate-pulse" />
-          <span className="hidden sm:inline">Network Stream:</span>
-          <span className="text-[#ece1df] font-bold">0:09 Loop</span>
-        </div>
-
-        <div className="h-3 w-[1px] bg-[#ece1df]/15 mx-1" />
-
-        <button
-          onClick={togglePlay}
-          className="p-1 rounded text-[#ece1df]/70 hover:text-[#ece1df] hover:bg-white/10 transition-colors cursor-pointer"
-          title={isPlaying ? 'Pause Background Video' : 'Play Background Video'}
-        >
-          {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-        </button>
-
-        <button
-          onClick={toggleMute}
-          className="p-1 rounded text-[#ece1df]/70 hover:text-[#ece1df] hover:bg-white/10 transition-colors cursor-pointer"
-          title={isMuted ? 'Unmute Background Audio' : 'Mute Background Audio'}
-        >
-          {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
-        </button>
-
-        <label
-          className="p-1 rounded text-[#ece1df]/70 hover:text-[#ece1df] hover:bg-white/10 transition-colors cursor-pointer"
-          title="Upload or Change Background Video File"
-        >
-          <Upload className="w-3.5 h-3.5" />
-          <input
-            type="file"
-            accept="video/mp4,video/webm,video/mov"
-            onChange={handleCustomUpload}
-            className="hidden"
-          />
-        </label>
-      </div>
     </div>
   );
 };
