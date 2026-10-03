@@ -306,7 +306,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenContact 
                   }
                   setSelectedService(service);
                 }}
-                className="group relative flex-none w-[82%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[min(32%,380px)] snap-start p-6 rounded-xl bg-[#be1920] hover:bg-[#a5151b] border border-[#ece1df]/15 hover:border-[#ece1df]/25 transition-all duration-300 flex flex-col justify-between cursor-pointer interactive-card shadow-[0_4px_16px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
+                className="service-capability-card group relative flex-none w-[82%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[min(32%,380px)] snap-start p-6 rounded-xl flex flex-col justify-between cursor-pointer interactive-card"
                 data-cursor="Inspect"
               >
                 <div>

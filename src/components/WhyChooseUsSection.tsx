@@ -100,10 +100,8 @@ export const WhyChooseUsSection: React.FC = () => {
                     }
                     setActiveFeature(idx);
                   }}
-                  className={`group relative p-7 rounded-2xl border transition-all duration-300 flex flex-col justify-between cursor-pointer h-full ${
-                    isSelected
-                      ? 'border-[#ece1df]/30 bg-[#be1920] shadow-md'
-                      : 'border-[#ece1df]/15 bg-[#be1920]/80 hover:border-[#ece1df]/25 hover:bg-[#be1920] shadow-[0_4px_16px_rgba(0,0,0,0.2)]'
+                  className={`why-feature-card group relative p-7 rounded-2xl flex flex-col justify-between cursor-pointer h-full ${
+                    isSelected ? 'is-selected' : ''
                   }`}
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
