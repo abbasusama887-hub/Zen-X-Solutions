@@ -671,6 +671,6 @@ export const TESTIMONIALS: TestimonialItem[] = [
 export const AGENCY_STATS = [
   { value: '180+', label: 'Projects Delivered', detail: 'On-time & on-budget' },
   { value: '99.4%', label: 'Client Retention', detail: 'Long-term enterprise contracts' },
-  { value: '24/7', label: 'Technology Support', detail: '24/7 round-the-clock support' },
+  { value: '24/7', label: 'Customer Support', detail: '24/7 round-the-clock support' },
   { value: '<15m', label: 'Average SLA Response', detail: '24/7 round-the-clock support' },
 ];
