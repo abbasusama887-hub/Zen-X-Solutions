@@ -1,5 +1,4 @@
 import React from 'react';
-import { ZenXLogo } from './ZenXLogo';
 import { SERVICES_LIST } from '../data/agencyData';
 
 interface FooterProps {
@@ -13,7 +12,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenContact }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 pb-16 border-b border-[#ece1df]/10">
           {/* Brand Column */}
           <div className="lg:col-span-4 space-y-4">
-            <ZenXLogo size="xl" variant="dark" />
+            <img
+              src="/Zen%20X%20Solutions%20Logo%20Reveal%20(2x).gif"
+              alt="Zen X Solutions"
+              className="h-20 w-auto max-w-full rounded-xl object-contain"
+            />
             <p className="text-xs sm:text-sm text-[#ece1df]/65 leading-relaxed max-w-sm pt-2">
               Zen X Solutions is a premier digital agency engineering high-performance web applications, bespoke Shopify architectures, cross-platform mobile ecosystems, and full-funnel digital growth engines.
             </p>

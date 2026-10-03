@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ZenXLogo } from './ZenXLogo';
 import { Menu, X, ArrowUpRight, ChevronDown } from 'lucide-react';
 
 interface NavbarProps {
@@ -7,25 +6,8 @@ interface NavbarProps {
   activeSection: string;
 }
 
-/*
-  ─── HEADER DIMENSIONS ────────────────────────────────────────────────
-  The LOGO.png is 600 × 600 px with transparent padding around the artwork.
-  The actual visible artwork (wings + X + text) occupies roughly the central
-  55–60 % of the canvas.
-
-  To make the VISIBLE artwork appear ~60 px tall we need to render the full
-  image at  60 / 0.57 ≈ 105 px.
-  We use 120 px (normal) / 96 px (scrolled) so the artwork is always bold
-  and immediately readable.
-
-  Header heights are set just large enough for the logo + 8 px breathing
-  room — no excess whitespace.
-  ─────────────────────────────────────────────────────────────────────
-*/
 const HEADER_H_NORMAL   = 80;   // px — top of page
 const HEADER_H_SCROLLED = 68;   // px — after user scrolls
-const LOGO_H_NORMAL     = 120;  // rendered img height (art ≈ 68 px visible)
-const LOGO_H_SCROLLED   = 96;   // rendered img height (art ≈ 55 px visible)
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenContact, activeSection }) => {
   const [isScrolled, setIsScrolled]     = useState(false);
@@ -84,7 +66,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact, activeSection }) 
   ];
 
   const headerH = isScrolled ? HEADER_H_SCROLLED : HEADER_H_NORMAL;
-  const logoH   = isScrolled ? LOGO_H_SCROLLED   : LOGO_H_NORMAL;
 
   return (
     <>
@@ -121,7 +102,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact, activeSection }) 
               className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#be1920] focus-visible:ring-offset-2 focus-visible:ring-offset-[#000612] rounded-md"
               style={{ lineHeight: 0, flexShrink: 0, paddingTop: 5 }}
             >
-              <ZenXLogo height={logoH} />
+              <img
+                src="/Zen%20X%20Solutions%20Logo%20Reveal%20(2x).gif"
+                alt="Zen X Solutions"
+                draggable={false}
+                className="h-[60px] w-auto max-w-full rounded-xl object-contain"
+              />
             </a>
 
             {/* ── DESKTOP NAV ─────────────────────────────── */}
@@ -240,7 +226,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact, activeSection }) 
           <div className="px-6 py-6 space-y-6">
             {/* Brand strip */}
             <div className="flex items-center gap-4 pb-5 border-b border-[#ece1df]/10">
-              <ZenXLogo height={64} />
+              <img
+                src="/Zen%20X%20Solutions%20Logo%20Reveal%20(2x).gif"
+                alt="Zen X Solutions"
+                draggable={false}
+                className="h-12 w-auto max-w-full rounded-xl object-contain"
+              />
               <div>
                 <div className="text-xs font-bold uppercase tracking-widest text-[#be1920]">
                   Zen X Solutions
